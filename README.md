@@ -155,7 +155,7 @@
   
   Pada soal nomor 1 ini, saya menggunakan fungsi enkripsi dan dekripsi. Dekripsi digunakan untuk menampilkan nama file dan foldernya. Sedangkan enkripsinya digunakan untuk mengakses folder masternya.<br>
   Berikut adalah hasilnya.<br>
-  ![soal1](/image/soal1.jpg)
+  ![soal1](/image/soal1.JPG)
   
   
   ## Soal 2
