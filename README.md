@@ -440,3 +440,6 @@
   ![soal4b](/image/soal4b.JPG)
   ![soal4c](/image/soal4c.JPG)
 ## Soal 5
+  Untuk soal nomor 5, kami menggunakan fungsi write untuk melakukan backup jika terjadi perubahan pada file, fungsi unlink untuk memindahkan file ke recycle bin. Tapi kami mengalami kendala setiap kali melakukan edit dan delete file. Berikut error yang terjadi.<br>
+  ![soal5](/image/soal5.JPG)<br>
+  Setiap kali pesan itu muncul maka folder yang dimount menghilang dari direktori.
