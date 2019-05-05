@@ -245,6 +245,127 @@
   ![soal2b](/image/soal2b.JPG)
   ![soal2c](/image/soal2c.JPG)
   
- ## Soal 3
- ## Soal 4
- ## Soal 5
+## Soal 3
+ 
+## Soal 4
+  ```
+  static void* pre_init(struct fuse_conn_info *conn)
+  {
+          char folder1[1024] = "/Videos";
+      char folder2[1024] = "/YOUTUBER";
+      enkripsi(folder1);
+      enkripsi(folder2);
+      char filename2[1024];
+        sprintf(filename2,"%s%s", source, folder1);
+      mkdir(filename2,0755);
+      memset(filename2,0,sizeof(filename2));
+      sprintf(filename2,"%s%s", source, folder2);
+      mkdir(filename2,0755);
+      memset(filename2,0,sizeof(filename2));
+
+      pid_t child1;
+      child1=fork();
+      if(child1==0){
+        DIR *dp;
+        struct dirent *de;
+        dp = opendir(source);
+        while((de = readdir(dp))){
+          if(strcmp(de->d_name,".")!=0 && strcmp(de->d_name,"..")!=0){
+            char ext[1024] = ".mkv";
+            enkripsi(ext);
+            if(strlen(de->d_name)>7 && strncmp(de->d_name+strlen(de->d_name)-8,ext,4)==0){
+
+                char joined[1024];
+                char video[1024] = "/Videos";
+                enkripsi(video);
+                sprintf(joined,"%s%s/",source,video);
+                strncat(joined,de->d_name,strlen(de->d_name)-4);
+                FILE* mainj;
+                mainj = fopen(joined,"a+");
+                FILE* need;
+                char this[1024];
+                sprintf(this,"%s/%s",source,de->d_name);
+                need = fopen(this,"r");
+                int c;
+                while(1) {
+                    c = fgetc(need);
+                    if( feof(need) ) {
+                       break;
+                    }
+                    fprintf(mainj,"%c",c);
+                  }
+
+            }
+          }
+        }
+        exit(EXIT_SUCCESS);
+      }
+
+          (void) conn;
+          return NULL;
+  }
+  static int xmp_chmod(const char *path, mode_t mode)
+  {
+    int res;
+      char filename2[1024];
+      char filename1[1024];
+    sprintf(filename1,"%s",path);
+    if(strlen(filename1)>9 && strncmp(filename1,"/YOUTUBER",9)==0 && strcmp(filename1+strlen(filename1)-4,".iz1")==0)
+    {
+      pid_t child1;
+      child1=fork();
+      if(child1==0){
+        execl("/usr/bin/zenity","/usr/bin/zenity","--error","--text=File ekstensi iz1 tidak boleh diubah permissionnya.","--title=Tidak bisa merubah",NULL);
+
+          printf("test\n");
+    }
+      else{
+        wait(NULL);
+      }
+    }
+    else{
+        enkripsi(filename1);
+      sprintf(filename2, "%s%s",source,filename1);
+      res = chmod(filename2, mode);
+    }
+    if (res == -1)
+      return -errno;
+
+    return 0;
+  }
+  static int xmp_create(const char* path, mode_t mode, struct fuse_file_info* fi)
+  {
+
+      (void) fi;
+      char filename2[1024];
+      char filename1[1024];
+    sprintf(filename1,"%s",path);
+      int res;
+    if(strlen(filename1)>9 && strncmp(filename1,"/YOUTUBER",9)==0)
+    {
+      strcat(filename1,".iz1");
+      enkripsi(filename1);
+      sprintf(filename2, "%s%s",source,filename1);
+        res = creat(filename2, 0640);
+    }
+    else{
+        enkripsi(filename1);
+      sprintf(filename2, "%s%s",source,filename1);
+        res = creat(filename2, mode);
+    }
+      if(res == -1)
+    return -errno;
+
+      close(res);
+
+      return 0;
+  }
+  ```
+  Pada soal nomor 4 ini, kami menggunakan fungsi pre init untuk membuat folder YOUTUBE.
+  Lalu kami juga menggunakan fungsi chmod untuk merubah permission dari file tersebut.
+  Lalu kami juga menggunakan fungsi create untuk menambahkan ekstensi file yang dicreate<br>
+  Berikut adalah hasilnya.<br>
+  ![soal4a](/image/soal4a.JPG)
+  ![soal4b](/image/soal4b.JPG)
+  ![soal4c](/image/soal4c.JPG)
+## Soal 5
