@@ -159,6 +159,92 @@
   
  # Revisi
  ## Soal 2
+  ```
+  static void* pre_init(struct fuse_conn_info *conn)
+  {
+          char folder1[1024] = "/Videos";
+      char folder2[1024] = "/YOUTUBER";
+      enkripsi(folder1);
+      enkripsi(folder2);
+      char filename2[1024];
+        sprintf(filename2,"%s%s", source, folder1);
+      mkdir(filename2,0755);
+      memset(filename2,0,sizeof(filename2));
+      sprintf(filename2,"%s%s", source, folder2);
+      mkdir(filename2,0755);
+      memset(filename2,0,sizeof(filename2));
+
+      pid_t child1;
+      child1=fork();
+      if(child1==0){
+        DIR *dp;
+        struct dirent *de;
+        dp = opendir(source);
+        while((de = readdir(dp))){
+          if(strcmp(de->d_name,".")!=0 && strcmp(de->d_name,"..")!=0){
+            char ext[1024] = ".mkv";
+            enkripsi(ext);
+            if(strlen(de->d_name)>7 && strncmp(de->d_name+strlen(de->d_name)-8,ext,4)==0){
+
+                char joined[1024];
+                char video[1024] = "/Videos";
+                enkripsi(video);
+                sprintf(joined,"%s%s/",source,video);
+                strncat(joined,de->d_name,strlen(de->d_name)-4);
+                FILE* mainj;
+                mainj = fopen(joined,"a+");
+                FILE* need;
+                char this[1024];
+                sprintf(this,"%s/%s",source,de->d_name);
+                need = fopen(this,"r");
+                int c;
+                while(1) {
+                    c = fgetc(need);
+                    if( feof(need) ) {
+                       break;
+                    }
+                    fprintf(mainj,"%c",c);
+                  }
+
+            }
+          }
+        }
+        exit(EXIT_SUCCESS);
+      }
+
+          (void) conn;
+          return NULL;
+  }
+
+  static void post_destroy(void* private_data)
+  {
+    char filename2[1024];
+    char folder[1024] = "/Videos";
+    enkripsi(folder);
+      sprintf(filename2,"%s%s", source, folder);
+
+    DIR *dp;
+    struct dirent *de;
+    dp = opendir(filename2);
+    while((de = readdir(dp))){
+      if(strcmp(de->d_name,".")!=0 && strcmp(de->d_name,"..")!=0){
+        char file[1024];
+        sprintf(file,"%s/%s",filename2,de->d_name);
+        remove(file);
+      }
+    }
+    rmdir(filename2);
+
+    return;
+  }
+  ```
+  Pada soal nomor 2 ini, kami menggunakan fungsi pre init untuk menjalankan file system sebelum inisialisasi. Pada fungsi pre init ini dibuat folder Videos, menscan file yang memiliki ekstensi .mkv, lalu dijoin pada folder Videos.
+  Lalu kami juga mengguanakan fungsi destroy untuk menghapus folder Videos<br>
+  Berikut adalah hasilnya.<br>
+  ![soal2a](/image/soal2a.JPG)
+  ![soal2b](/image/soal2b.JPG)
+  ![soal2c](/image/soal2c.JPG)
+  
  ## Soal 3
  ## Soal 4
  ## Soal 5
