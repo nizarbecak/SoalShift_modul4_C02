@@ -246,6 +246,77 @@
   ![soal2c](/image/soal2c.JPG)
   
 ## Soal 3
+ ```
+ static int xmp_readdir(const char *path, void *buf, fuse_fill_dir_t filler,
+             off_t offset, struct fuse_file_info *fi)
+  {
+      char filename2[1024];
+      char filename1[1024];
+    sprintf(filename1,"%s",path);
+      enkripsi(filename1);
+    sprintf(filename2, "%s%s",source,filename1);
+
+    DIR *dp;
+    struct dirent *de;
+
+    (void) offset;
+    (void) fi;
+
+    dp = opendir(filename2);
+    if (dp == NULL)
+      return -errno;
+
+    while ((de = readdir(dp)) != NULL) {
+      struct stat st;
+          char filename3[1024];
+      strcpy(filename3,de->d_name);
+      char filename4[1024];
+      sprintf(filename4,"%s%s",filename2,filename3);
+      dekripsi(filename3);
+
+      struct stat tmp;
+      stat(filename4,&tmp);
+      struct passwd *filename1 = getpwuid(tmp.st_uid);
+        struct group *grup = getgrgid(tmp.st_gid);
+
+      if( (strcmp(filename1->pw_name,"chipset") == 0 || strcmp(filename1->pw_name,"ic_controller") == 0) 
+        && strcmp(grup->gr_name,"rusak")==0 
+        && ((tmp.st_mode & S_IRUSR) == 0 || (tmp.st_mode & S_IRGRP) == 0 || (tmp.st_mode & S_IROTH) == 0) )
+      {
+        printf("%s\n",filename4);
+        char root[1024];
+        strcpy(root,source);
+        char note[1024] = "/filemiris.txt";
+        enkripsi(note);
+        strcat(root,note);
+        FILE * fp;
+          fp = fopen (root, "a+");
+        char t[1024];
+        time_t now = time(NULL);
+        strftime(t, 20, "%Y-%m-%d %H:%M:%S", localtime(&now));
+        char buffer[1024];
+        sprintf(buffer,"%s-%d-%d-%s",filename3,filename1->pw_uid,grup->gr_gid,t);
+        fprintf(fp,"%s\n",buffer);
+        remove(filename4);
+        fclose(fp);
+        chown(root,1024,1024);
+      }
+      else{
+        memset(&st, 0, sizeof(st));
+        st.st_ino = de->d_ino;
+        st.st_mode = de->d_type << 12;
+        if (filler(buf, filename3, &st, 0))
+          break;
+      }
+    }
+
+    closedir(dp);
+    return 0;
+  }
+ ```
+ Pada soal nomor 3 ini, kami menggunakan fungsi pre init untuk menjalankan file system sebelum inisialisasi. Pada fungsi pre init ini menscan file owner dan grup, jika ownernya "chipset" atau "ic_controller" dengan group "rusak" dan file tidak dapat diread, maka akan dihapus dan dicatat pada "filemiris.txt"<br>
+  Berikut adalah hasilnya.<br>
+  ![soal3](/image/soal3.JPG)
  
 ## Soal 4
   ```
