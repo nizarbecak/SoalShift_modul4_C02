@@ -157,8 +157,8 @@
   Berikut adalah hasilnya.<br>
   ![soal1](/image/soal1.JPG)
   
-  
-  ## Soal 2
-  ## Soal 3
-  ## Soal 4
-  ## Soal 5
+ # Revisi
+ ## Soal 2
+ ## Soal 3
+ ## Soal 4
+ ## Soal 5
